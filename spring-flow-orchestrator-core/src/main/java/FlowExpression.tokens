@@ -1,0 +1,16 @@
+ARROW=1
+QMARK=2
+COLON=3
+COMMA=4
+EQ=5
+LPAREN=6
+RPAREN=7
+ID=8
+WS=9
+'->'=1
+'?'=2
+':'=3
+','=4
+'='=5
+'('=6
+')'=7

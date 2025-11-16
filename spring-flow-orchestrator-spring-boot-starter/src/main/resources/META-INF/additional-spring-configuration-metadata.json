@@ -1,0 +1,28 @@
+{
+  "properties": [
+    {
+      "name": "flow.orchestrator.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable flow orchestrator",
+      "defaultValue": true
+    },
+    {
+      "name": "flow.orchestrator.slot-size",
+      "type": "java.lang.Integer",
+      "description": "Slot size for context isolation",
+      "defaultValue": 1024
+    },
+    {
+      "name": "flow.orchestrator.print-execution-log",
+      "type": "java.lang.Boolean",
+      "description": "Enable detailed execution logging",
+      "defaultValue": true
+    },
+    {
+      "name": "flow.orchestrator.thread-pool-size",
+      "type": "java.lang.Integer",
+      "description": "Default thread pool size",
+      "defaultValue": 64
+    }
+  ]
+}
