@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.orchestrator</groupId>
+        <groupId>com.eking</groupId>
         <artifactId>spring-flow-orchestrator-parent</artifactId>
         <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
@@ -31,8 +31,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.orchestrator</groupId>
+            <groupId>com.eking</groupId>
             <artifactId>spring-flow-orchestrator-spring-boot-starter</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
         <dependency>
