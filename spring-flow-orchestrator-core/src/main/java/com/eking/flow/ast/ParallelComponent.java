@@ -6,12 +6,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Parallel component representing parallel execution: (A, B, C)
- * or FORK...JOIN pattern
+ *
+ * 并行组件表示并行执行：(A, B, C)
+ * 或者 FORK...JOIN 模式
  */
 public class ParallelComponent implements FlowComponent {
+    /**
+     * 并行分支组件列表
+     */
     private final List<FlowComponent> branches;
+    /**
+     * 并行分支的FORK节点ID
+     */
     private final String forkNodeId;
+    /**
+     * 并行分支的JOIN节点ID
+     */
     private final String joinNodeId;
 
     public ParallelComponent(List<FlowComponent> branches) {
@@ -58,26 +68,26 @@ public class ParallelComponent implements FlowComponent {
             ExecutionPlan branchPlan = branch.toExecutionPlan();
             allBranchComponents.addAll(branchPlan.getSequentialComponents());
 
-            // Merge parallel branches
+            // 合并并行分支
             for (String key : branchPlan.getParallelBranches().keySet()) {
                 result.getParallelBranches().put(key, branchPlan.getParallelBranches().get(key));
             }
 
-            // Merge conditional branches
+            // 合并条件分支
             result.getConditionalBranches().putAll(branchPlan.getConditionalBranches());
         }
 
-        // Register parallel branches from fork node
+        // 注册并行分支
         if (forkNodeId != null) {
             result.addParallelBranches(forkNodeId, allBranchComponents);
         }
 
-        // Add join node
+        // 添加JOIN节点
         if (joinNodeId != null) {
             result.addSequentialComponent(joinNodeId);
         }
 
-        // If no fork node, just add all branch components
+        // 如果没有FORK节点，直接添加所有分支组件
         if (forkNodeId == null) {
             for (String comp : allBranchComponents) {
                 result.addSequentialComponent(comp);

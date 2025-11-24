@@ -3,7 +3,7 @@ package com.eking.flow.example.complex;
 import com.eking.flow.bus.FlowBus;
 import com.eking.flow.example.ComplexFlowContext;
 import com.eking.flow.executor.FlowExecutor;
-import com.eking.flow.response.LiteflowResponse;
+import com.eking.flow.response.EkingflowResponse;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -173,7 +173,7 @@ public class FlowOrchestratorDemo implements CommandLineRunner {
             System.out.println();
 
             long startTime = System.currentTimeMillis();
-            LiteflowResponse response = flowExecutor.execute(flowId, context);
+            EkingflowResponse response = flowExecutor.execute(flowId, context);
             long endTime = System.currentTimeMillis();
 
             System.out.println("\n流程执行结果:");

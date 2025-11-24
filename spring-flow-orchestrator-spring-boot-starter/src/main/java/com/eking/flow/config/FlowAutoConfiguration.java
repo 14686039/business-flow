@@ -13,7 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Map;
 
 /**
- * Spring Boot auto-configuration for flow orchestrator.
+ *
+ * 自动配置类 - 配置流程执行器、消息总线和节点组件
  */
 @Configuration
 @ConditionalOnClass({FlowExecutor.class, FlowBus.class})
@@ -22,7 +23,8 @@ import java.util.Map;
 public class FlowAutoConfiguration {
 
     /**
-     * Create FlowExecutor bean
+     *
+     * 创建流程执行器 bean
      */
     @Bean
     @ConditionalOnMissingBean
@@ -31,7 +33,8 @@ public class FlowAutoConfiguration {
     }
 
     /**
-     * Create FlowBus bean
+     *
+     * 创建消息总线 bean
      */
     @Bean
     @ConditionalOnMissingBean
@@ -40,7 +43,8 @@ public class FlowAutoConfiguration {
     }
 
     /**
-     * Auto-register NodeComponent beans
+     *
+     * 自动注册节点组件 bean
      */
     @Configuration
     @ConditionalOnClass(NodeComponent.class)
@@ -53,7 +57,8 @@ public class FlowAutoConfiguration {
         }
 
         /**
-         * Register all NodeComponent beans automatically
+         *
+         * 自动注册所有 NodeComponent bean
          */
         @Bean
         public ComponentRegistrar componentRegistrar(Map<String, NodeComponent> componentMap) {
@@ -62,7 +67,8 @@ public class FlowAutoConfiguration {
     }
 
     /**
-     * Helper class to register all NodeComponent beans
+     *
+     * 帮助类 - 自动注册所有 NodeComponent bean
      */
     public static class ComponentRegistrar {
 

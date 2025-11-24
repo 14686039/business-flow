@@ -3,7 +3,7 @@ package com.eking.flow.execution;
 import java.util.*;
 
 /**
- * Represents the execution plan for a flow.
+ * 一个流程的执行计划
  */
 public class ExecutionPlan {
 
@@ -16,48 +16,74 @@ public class ExecutionPlan {
         this.conditionalBranches = new HashMap<>();
         this.parallelBranches = new HashMap<>();
     }
-
+    /**
+     * 添加一个顺序组件到执行计划中。
+     * @param componentId 组件ID
+     */
     public void addSequentialComponent(String componentId) {
         sequentialComponents.add(componentId);
     }
-
+    /**
+     * 添加一个条件分支到执行计划中。
+     * @param routerId 路由组件ID
+     * @param condition 条件表达式
+     * @param targetComponentId 目标组件ID
+     */
     public void addConditionalBranch(String routerId, String condition, String targetComponentId) {
         conditionalBranches.computeIfAbsent(routerId, k -> new ConditionalBranch())
                            .addBranch(condition, targetComponentId);
     }
-
+    /**
+     * 添加一个并行分支到执行计划中。
+     * @param forkNodeId 分岔节点ID
+     * @param branchComponentIds 并行分支组件ID列表
+     */
     public void addParallelBranches(String forkNodeId, List<String> branchComponentIds) {
         parallelBranches.put(forkNodeId, branchComponentIds);
     }
-
+    /**
+     * 获取顺序组件列表。
+     * @return 顺序组件列表
+     */
     public List<String> getSequentialComponents() {
         return sequentialComponents;
     }
-
+    /**
+     * 获取路由组件的条件分支。
+     * @return 路由组件的条件分支
+     */
     public Map<String, ConditionalBranch> getConditionalBranches() {
         return conditionalBranches;
     }
 
+    /**
+     * 获取并行分支映射。
+     * @return 并行分支映射
+     */
     public Map<String, List<String>> getParallelBranches() {
         return parallelBranches;
     }
 
     /**
-     * Get parallel branches for a fork node
+     * 获取一个分岔节点的并行分支。
+     * @param forkNodeId 分岔节点ID
+     * @return 分岔节点的并行分支
      */
     public List<String> getParallelBranches(String forkNodeId) {
         return parallelBranches.get(forkNodeId);
     }
 
     /**
-     * Get conditional branches for a router node
+     * 获取路由组件的条件分支。
+     * @param routerId 路由组件ID
+     * @return 路由组件的条件分支
      */
     public ConditionalBranch getConditionalBranches(String routerId) {
         return conditionalBranches.get(routerId);
     }
 
     /**
-     * Represents a conditional branch from a routing component
+     * 表示一个路由组件的条件分支。
      */
     public static class ConditionalBranch {
         private Map<String, String> conditionMap; // condition -> target component

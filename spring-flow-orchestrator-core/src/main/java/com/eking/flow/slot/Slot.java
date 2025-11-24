@@ -5,8 +5,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Slot for context isolation in concurrent execution.
- * Inspired by LiteFlow's Slot design.
+ * 用于并发执行中的上下文隔离。
  */
 public class Slot {
 
@@ -24,35 +23,35 @@ public class Slot {
     }
 
     /**
-     * Get slot ID
+     * 获取槽 ID
      */
     public Long getId() {
         return id;
     }
 
     /**
-     * Get start time
+     * 获取开始时间
      */
     public Long getStartTime() {
         return startTime;
     }
 
     /**
-     * Get end time
+     * 获取结束时间
      */
     public Long getEndTime() {
         return endTime;
     }
 
     /**
-     * Set end time
+     * 设置结束时间
      */
     public void setEndTime(Long endTime) {
         this.endTime = endTime;
     }
 
     /**
-     * Get execution duration in milliseconds
+     * 获取执行持续时间（毫秒）
      */
     public Long getDuration() {
         if (endTime == null) {
@@ -62,7 +61,7 @@ public class Slot {
     }
 
     /**
-     * Get data by key
+     * 获取数据
      */
     @SuppressWarnings("unchecked")
     public <T> T getData(String key) {
@@ -70,35 +69,35 @@ public class Slot {
     }
 
     /**
-     * Set data by key
+     * 设置数据
      */
     public void setData(String key, Object value) {
         data.put(key, value);
     }
 
     /**
-     * Remove data by key
+     * 移除数据
      */
     public void removeData(String key) {
         data.remove(key);
     }
 
     /**
-     * Check if data exists for key
+     * 检查是否存在指定键的数据
      */
     public boolean hasData(String key) {
         return data.containsKey(key);
     }
 
     /**
-     * Get all data
+     * 获取所有数据
      */
     public Map<String, Object> getData() {
         return new HashMap<>(data);
     }
 
     /**
-     * Clear all data
+     * 清除所有数据
      */
     public void clearData() {
         data.clear();

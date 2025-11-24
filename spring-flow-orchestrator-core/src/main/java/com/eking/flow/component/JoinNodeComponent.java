@@ -3,14 +3,15 @@ package com.eking.flow.component;
 import java.util.List;
 
 /**
- * Extended component that supports join/aggregation after parallel execution.
- * This component will be executed after all forked branches complete.
+ *
+ * 加入节点组件 - 用于并行执行分支后合并结果
  */
 public abstract class JoinNodeComponent extends NodeComponent {
 
     /**
-     * Join logic - executed after all parallel branches complete
-     * Subclasses can override this to aggregate results from forked branches
+     *
+     * 加入逻辑 - 所有并行分支完成后执行
+     * 子类可以覆盖此方法来聚合来自分支的结果
      */
     public void process() throws Exception {
         System.out.println("[JoinNode] All branches completed, aggregating results...");
@@ -19,6 +20,7 @@ public abstract class JoinNodeComponent extends NodeComponent {
     /**
      * Custom join logic that receives the list of completed component names
      * Subclasses can override this to access the list of completed branches
+     *
      */
     public void join(List<String> completedBranches) throws Exception {
         // Default implementation just calls process()
@@ -26,7 +28,8 @@ public abstract class JoinNodeComponent extends NodeComponent {
     }
 
     /**
-     * Get the names of completed branches from slot data
+     *
+     * 获取所有已完成分支的组件名称列表
      */
     protected List<String> getCompletedBranches() {
         return getData("__completed_branches__");

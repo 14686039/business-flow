@@ -34,8 +34,7 @@ public class ComponentListenerAspect {
     }
 
     /**
-     * ★★★ 修改切点：使其更通用。
-     * 匹配 com.example.demo.components 包下，所有 AbstractComponent 的子类中的任何方法执行。
+     * 匹配所有 NodeComponent 及其所有子类中的任何方法执行。
      * astractComponent+ 表示 AbstractComponent 及其所有子类。
      */
     @Pointcut("within(com.eking.flow.component.NodeComponent+)")

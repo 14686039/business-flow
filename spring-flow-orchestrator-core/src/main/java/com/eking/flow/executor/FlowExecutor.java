@@ -6,7 +6,7 @@ import com.eking.flow.context.FlowContext;
 import com.eking.flow.execution.ExecutionPlan;
 import com.eking.flow.execution.ParallelExecutor;
 import com.eking.flow.parser.ANTLR4FlowParser;
-import com.eking.flow.response.LiteflowResponse;
+import com.eking.flow.response.EkingflowResponse;
 import com.eking.flow.routing.RoutingResult;
 import com.eking.flow.slot.Slot;
 import org.slf4j.Logger;
@@ -15,9 +15,8 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 /**
- * Main execution engine for flow orchestration.
- * Inspired by LiteFlow's FlowExecutor design.
- * Now using ANTLR4-based parser for enterprise-grade nested expression support.
+ * 现在使用ANTLR4解析器支持企业级嵌套表达式。
+ * 支持并行执行多个分支。
  */
 public class FlowExecutor {
 
@@ -42,18 +41,18 @@ public class FlowExecutor {
     }
 
     /**
-     * Execute a flow with a custom context
+     * 执行一个自定义上下文的流程。
      */
-    public LiteflowResponse execute(String flowId, FlowContext context) {
+    public EkingflowResponse execute(String flowId, FlowContext context) {
         logger.info("Starting flow execution: {}", flowId);
 
-        LiteflowResponse response = LiteflowResponse.success();
+        EkingflowResponse response = EkingflowResponse.success();
         Slot slot = new Slot();
         response.setSlot(slot);
         response.setContext(context);
 
         try {
-            // Get flow definition
+            // 获取流程定义
             String elExpression = flowBus.getFlowDefinition(flowId);
             if (elExpression == null) {
                 String errorMsg = "Flow not found: " + flowId;
@@ -65,15 +64,15 @@ public class FlowExecutor {
                 return response;
             }
 
-            // Parse EL expression to execution plan
+            // 匹配表达式到执行计划
             logger.debug("Using ANTLR4 parser");
             ExecutionPlan plan = flowParser.parse(elExpression);
             logger.info("Parsed flow {} into plan: {}", flowId, plan);
 
-            // Execute flow based on plan
+            // 执行流程
             executeFlow(plan, response, slot);
 
-            // Mark slot as completed
+            // 标记slot为完成
             slot.setEndTime(System.currentTimeMillis());
             logger.info("Flow execution completed: {} in {}ms", flowId, slot.getDuration());
 
@@ -90,9 +89,9 @@ public class FlowExecutor {
     }
 
     /**
-     * Execute flow based on execution plan
+     * 执行基于执行计划的流程。
      */
-    private void executeFlow(ExecutionPlan plan, LiteflowResponse response, Slot slot) throws Exception {
+    private void executeFlow(ExecutionPlan plan, EkingflowResponse response, Slot slot) throws Exception {
         Set<String> executedComponents = new HashSet<>();
         int index = 0;
 
@@ -100,18 +99,18 @@ public class FlowExecutor {
             String componentId = plan.getSequentialComponents().get(index);
             index++;
 
-            // Check if this component has parallel branches (fork node)
+            // 检查是否有并行分支（fork节点）
             List<String> branches = plan.getParallelBranches(componentId);
             if (branches != null && !branches.isEmpty()) {
-                // This is a fork node - execute branches in parallel
+                // 这是一个fork节点 - 并行执行分支
                 logger.debug("Executing parallel branches for fork node: {}", componentId);
 
-                // Execute the fork node itself
+                // 先执行fork节点本身
                 executeComponent(componentId, response, slot);
                 executedComponents.add(componentId);
 
                 if (response.isSuccess()) {
-                    // Execute all branches in parallel
+                    // 并行执行所有分支
                     parallelExecutor.executeParallel(
                         branches,
                         (branchId) -> executeComponent(branchId, response, slot),
@@ -119,35 +118,35 @@ public class FlowExecutor {
                         slot
                     );
 
-                    // Mark all branches as executed
+                    // 标记所有分支为已执行
                     executedComponents.addAll(branches);
 
-                    // Find and execute the join node (next component)
+                    // 检查是否有join节点（下一个组件）
                     if (index < plan.getSequentialComponents().size()) {
                         String joinNodeId = plan.getSequentialComponents().get(index);
                         logger.debug("Executing join node: {}", joinNodeId);
                         executeComponent(joinNodeId, response, slot);
                         executedComponents.add(joinNodeId);
-                        index++; // Skip the join node as it's already executed
+                        index++; // 跳过join节点，因为它已经执行过了
                     }
                 }
             } else {
-                // Regular sequential execution
+                // 这不是一个fork节点 - 顺序执行
                 executeComponent(componentId, response, slot);
                 executedComponents.add(componentId);
 
-                // Check if this was a routing component
+                // 检查是否有路由组件
                 RoutingResult routingResult = checkRouting(componentId, response);
                 if (routingResult != null && routingResult.shouldContinue()) {
                     String targetId = routingResult.getTargetComponentId();
 
-                    // Handle stop routing
+                    // 处理路由结果 - 继续执行或停止
                     if ("__STOP__".equals(targetId)) {
                         logger.debug("Routing component {} requested to stop execution", componentId);
                         break;
                     }
 
-                    // Check if target is in the plan
+                    // 处理路由结果 - 继续执行目标组件
                     if (targetId != null && !executedComponents.contains(targetId)) {
                         logger.debug("Routing to component: {}", targetId);
                         executeComponent(targetId, response, slot);
@@ -156,7 +155,7 @@ public class FlowExecutor {
                 }
             }
 
-            // Check if we should stop on error
+            // 处理路由结果 - 检查是否应该继续执行
             if (!response.isSuccess() && !response.getContext().isContinueOnError()) {
                 logger.warn("Flow execution stopped due to component failure: {}", componentId);
                 break;
@@ -165,9 +164,9 @@ public class FlowExecutor {
     }
 
     /**
-     * Check if component is a routing component and get routing result
+     * 检查组件是否是路由组件并获取路由结果
      */
-    private RoutingResult checkRouting(String componentId, LiteflowResponse response) {
+    private RoutingResult checkRouting(String componentId, EkingflowResponse response) {
         if (!response.getSlot().hasData("__routing_target__")) {
             return null;
         }
@@ -187,28 +186,28 @@ public class FlowExecutor {
     }
 
     /**
-     * Execute a flow without context
+     * 执行一个流程而不包含上下文
      */
-    public LiteflowResponse execute(String flowId) {
+    public EkingflowResponse execute(String flowId) {
         return execute(flowId, new DefaultFlowContext());
     }
 
     /**
-     * Execute a single component
+     * 执行一个单独的组件并返回响应
      */
-    public LiteflowResponse executeComponent(String componentId, FlowContext context) {
-        LiteflowResponse response = LiteflowResponse.success();
+    public EkingflowResponse executeComponent(String componentId, FlowContext context) {
+        EkingflowResponse response = EkingflowResponse.success();
         Slot slot = new Slot();
         executeComponent(componentId, response, slot);
         return response;
     }
 
     /**
-     * Execute a single component with response and slot
+     * 执行一个单独的组件并返回响应
      */
-    private void executeComponent(String componentId, LiteflowResponse response, Slot slot) {
+    private void executeComponent(String componentId, EkingflowResponse response, Slot slot) {
         try {
-            // Get component from registry
+            // 从总线获取组件实例
             NodeComponent component = flowBus.getComponent(componentId);
             if (component == null) {
                 String errorMsg = "Component not found: " + componentId;
@@ -218,13 +217,13 @@ public class FlowExecutor {
                 return;
             }
 
-            // Setup component with context and slot
+            // 设置组件上下文和插槽
             component.setContext(response.getContext());
             component.setSlot(slot);
 
             logger.debug("Executing component: {}", componentId);
 
-            // Execute component lifecycle
+            // 执行组件生命周期方法
             component.beforeProcess();
             response.addExecutedComponent(component.getName());
 
@@ -251,7 +250,7 @@ public class FlowExecutor {
     }
 
     /**
-     * Default context implementation
+     * 默认流程上下文实现
      */
     private static class DefaultFlowContext extends FlowContext {
         private boolean continueOnError = false;

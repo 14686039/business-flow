@@ -3,29 +3,28 @@ package com.eking.flow.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * Configuration properties for flow orchestrator.
- * Inspired by LiteFlow's LiteflowConfig design.
+ * 流程协调器配置属性
  */
 @ConfigurationProperties(prefix = "flow.orchestrator")
 public class FlowProperties {
 
     /**
-     * Enable flow orchestrator
+     * 是否启用流程协调器
      */
     private boolean enabled = true;
 
     /**
-     * Slot size for context isolation
+     * 上下文隔离槽位大小
      */
     private int slotSize = 1024;
 
     /**
-     * Enable detailed logging
+     * 是否启用详细执行日志打印
      */
     private boolean printExecutionLog = true;
 
     /**
-     * Default thread pool size
+     * 默认线程池大小
      */
     private int threadPoolSize = 64;
 

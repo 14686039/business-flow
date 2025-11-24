@@ -2,7 +2,7 @@ package com.eking.flow.example;
 
 import com.eking.flow.bus.FlowBus;
 import com.eking.flow.executor.FlowExecutor;
-import com.eking.flow.response.LiteflowResponse;
+import com.eking.flow.response.EkingflowResponse;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -63,7 +63,7 @@ public class FlowOrchestratorExampleApplication {
         context.setPaymentMethod("Credit Card");
         context.setCustomerEmail("customer@example.com");
 
-        LiteflowResponse response = flowExecutor.execute("routedOrderFlow", context);
+        EkingflowResponse response = flowExecutor.execute("routedOrderFlow", context);
 
         System.out.println("\n--- Flow Execution Result ---");
         System.out.println("Success: " + response.isSuccess());
@@ -93,7 +93,7 @@ public class FlowOrchestratorExampleApplication {
         System.out.println("\nStarting execution...\n");
 
         long startTime = System.currentTimeMillis();
-        LiteflowResponse response = flowExecutor.execute("parallelOrderFlow", context);
+        EkingflowResponse response = flowExecutor.execute("parallelOrderFlow", context);
         long endTime = System.currentTimeMillis();
 
         System.out.println("\n--- Parallel Flow Execution Result ---");

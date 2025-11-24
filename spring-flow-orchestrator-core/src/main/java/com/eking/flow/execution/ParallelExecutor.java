@@ -1,6 +1,6 @@
 package com.eking.flow.execution;
 
-import com.eking.flow.response.LiteflowResponse;
+import com.eking.flow.response.EkingflowResponse;
 import com.eking.flow.slot.Slot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 /**
- * Manages parallel execution of multiple branches.
+ * 管理并行执行多个分支的组件。
  */
 public class ParallelExecutor {
 
@@ -22,11 +22,16 @@ public class ParallelExecutor {
     }
 
     /**
-     * Execute multiple components in parallel
+     * 并行执行多个组件。
+     * @param componentIds 组件ID列表
+     * @param executor 组件执行器
+     * @param response 流程响应对象
+     * @param slot 插槽对象
+     * @throws Exception 如果执行过程中发生错误
      */
     public void executeParallel(List<String> componentIds,
                                 RunnableComponentExecutor executor,
-                                LiteflowResponse response,
+                                EkingflowResponse response,
                                 Slot slot) throws Exception {
 
         if (componentIds == null || componentIds.isEmpty()) {
@@ -34,7 +39,7 @@ public class ParallelExecutor {
         }
 
         if (componentIds.size() == 1) {
-            // Single component, execute sequentially
+            // 单个组件顺序执行
             executor.execute(componentIds.get(0));
             return;
         }
@@ -44,7 +49,7 @@ public class ParallelExecutor {
         List<Future<Void>> futures = new ArrayList<>();
         List<String> completedBranches = Collections.synchronizedList(new ArrayList<>());
 
-        // Submit all branch executions
+        // 提交所有分支执行任务到线程池
         for (String componentId : componentIds) {
             Future<Void> future = executorService.submit(() -> {
                 try {
@@ -60,13 +65,13 @@ public class ParallelExecutor {
             futures.add(future);
         }
 
-        // Wait for all branches to complete
+        //  等等所有分支执行完成
         try {
             for (Future<Void> future : futures) {
-                future.get(); // This will throw exception if any branch failed
+                future.get(); // 等待分支执行完成，若有异常会抛出
             }
 
-            // Store completed branches in slot for join node
+            // 存储已完成的分支到插槽，用于合并节点
             slot.setData("__completed_branches__", completedBranches);
 
             logger.info("All {} branches completed successfully", componentIds.size());
@@ -82,7 +87,7 @@ public class ParallelExecutor {
     }
 
     /**
-     * Shutdown the executor
+     * 关闭并行执行器，释放线程池资源。
      */
     public void shutdown() {
         executorService.shutdown();
@@ -97,7 +102,7 @@ public class ParallelExecutor {
     }
 
     /**
-     * Functional interface for executing a component
+     * 函数式接口，用于执行一个组件。
      */
     @FunctionalInterface
     public interface RunnableComponentExecutor {

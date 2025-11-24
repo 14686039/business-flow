@@ -6,18 +6,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Extended component that supports fork/parallel execution.
- * Subclasses should implement fork() method to define the branches.
+ *
+ * 支持分支 / 并行执行的扩展组件
+ * 子类需要实现 fork() 方法来定义分支逻辑
+ * fork() 方法应该返回一个 ForkResult 对象，指定要并行执行的组件 ID 列表
+ * 如果返回 null，则表示继续顺序执行后续组件
  */
 public abstract class ForkNodeComponent extends NodeComponent {
 
     /**
-     * Define fork logic - return the list of component IDs to execute in parallel
+     *
+     * 定义分支逻辑，返回要并行执行的组件 ID 列表
+     * 如果返回 null，则表示继续顺序执行后续组件
      */
     public abstract ForkResult fork() throws Exception;
 
     /**
-     * Override process() to implement fork logic
+     *
+     * 重构：执行 fork 逻辑
      */
     @Override
     public void process() throws Exception {
@@ -32,21 +38,22 @@ public abstract class ForkNodeComponent extends NodeComponent {
     }
 
     /**
-     * Helper method to extract multiple branch IDs from a list
+     *
+     * 从列表中提取多个分支 ID
      */
     protected ForkResult forkAll(String... componentIds) {
         return ForkResult.forkTo(componentIds);
     }
 
     /**
-     * Helper method to create a fork result
+     * 创建一个分支结果，指定要并行执行的组件 ID 列表
      */
     protected ForkResult forkTo(String componentId1, String componentId2) {
         return ForkResult.forkTo(componentId1, componentId2);
     }
 
     /**
-     * Helper method to create a fork result with three branches
+     * 创建一个分支结果，指定要并行执行的组件 ID 列表（最多 3 个）
      */
     protected ForkResult forkTo(String componentId1, String componentId2, String componentId3) {
         List<String> branches = new ArrayList<>();
@@ -57,7 +64,7 @@ public abstract class ForkNodeComponent extends NodeComponent {
     }
 
     /**
-     * Helper method to continue sequentially (no actual fork)
+     * 继续顺序执行后续组件（不实际分支）
      */
     protected ForkResult continueSequential(String componentId) {
         return ForkResult.continueSequential(componentId);

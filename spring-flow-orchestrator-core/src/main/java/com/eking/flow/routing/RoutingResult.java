@@ -1,7 +1,7 @@
 package com.eking.flow.routing;
 
 /**
- * Represents the result of a routing decision.
+ * 表示路由决策的结果。
  */
 public class RoutingResult {
 
@@ -14,23 +14,29 @@ public class RoutingResult {
     }
 
     /**
-     * Create a routing result that continues to a specific component
+     * 创建一个路由结果，继续执行到指定组件
      */
     public static RoutingResult continueTo(String targetComponentId) {
         return new RoutingResult(targetComponentId, true);
     }
 
     /**
-     * Create a routing result that stops execution
+     * 创建一个路由结果，停止执行
      */
     public static RoutingResult stop() {
         return new RoutingResult(null, false);
     }
 
+    /**
+     * 获取目标组件 ID
+     */
     public String getTargetComponentId() {
         return targetComponentId;
     }
 
+    /**
+     * 判断是否应该继续执行
+     */
     public boolean shouldContinue() {
         return shouldContinue;
     }

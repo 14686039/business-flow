@@ -7,10 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Response wrapper for flow execution.
- * Inspired by LiteFlow's LiteflowResponse design.
+ * 流程执行响应类
  */
-public class LiteflowResponse {
+public class EkingflowResponse {
 
     private boolean success;
     private String message;
@@ -20,132 +19,132 @@ public class LiteflowResponse {
     private List<String> executedComponents;
     private Object data;
 
-    public LiteflowResponse() {
+    public EkingflowResponse() {
         this.executedComponents = new ArrayList<>();
     }
 
     /**
-     * Create successful response
+     * 创建成功响应
      */
-    public static LiteflowResponse success() {
-        LiteflowResponse response = new LiteflowResponse();
+    public static EkingflowResponse success() {
+        EkingflowResponse response = new EkingflowResponse();
         response.setSuccess(true);
         return response;
     }
 
     /**
-     * Create failed response
+     * 创建失败响应
      */
-    public static LiteflowResponse fail(Exception exception) {
-        LiteflowResponse response = new LiteflowResponse();
+    public static EkingflowResponse fail(Exception exception) {
+        EkingflowResponse response = new EkingflowResponse();
         response.setSuccess(false);
         response.setException(exception);
         return response;
     }
 
     /**
-     * Create failed response with message
+     * 创建失败响应
      */
-    public static LiteflowResponse fail(String message) {
-        LiteflowResponse response = new LiteflowResponse();
+    public static EkingflowResponse fail(String message) {
+        EkingflowResponse response = new EkingflowResponse();
         response.setSuccess(false);
         response.setMessage(message);
         return response;
     }
 
     /**
-     * Check if execution was successful
+     * 检查执行是否成功
      */
     public boolean isSuccess() {
         return success;
     }
 
     /**
-     * Set success flag
+     * 设置执行成功标志
      */
     public void setSuccess(boolean success) {
         this.success = success;
     }
 
     /**
-     * Get message
+     * 获取失败消息
      */
     public String getMessage() {
         return message;
     }
 
     /**
-     * Set message
+     * 设置失败消息
      */
     public void setMessage(String message) {
         this.message = message;
     }
 
     /**
-     * Get exception
+     * 获取异常
      */
     public Exception getException() {
         return exception;
     }
 
     /**
-     * Set exception
+     * 设置异常
      */
     public void setException(Exception exception) {
         this.exception = exception;
     }
 
     /**
-     * Get context
+     * 获取上下文
      */
     public FlowContext getContext() {
         return context;
     }
 
     /**
-     * Set context
+     * 设置上下文
      */
     public void setContext(FlowContext context) {
         this.context = context;
     }
 
     /**
-     * Get slot
+     * 获取槽位
      */
     public Slot getSlot() {
         return slot;
     }
 
     /**
-     * Set slot
+     * 设置槽位
      */
     public void setSlot(Slot slot) {
         this.slot = slot;
     }
 
     /**
-     * Get list of executed component names
+     * 获取执行的组件列表
      */
     public List<String> getExecutedComponents() {
         return executedComponents;
     }
 
     /**
-     * Add executed component name
+     * 添加执行的组件名称
      */
     public void addExecutedComponent(String componentName) {
         this.executedComponents.add(componentName);
     }
 
     /**
-     * Get response data
+     * 获取响应数据
      */
     public Object getData() {
         return data;
     }
 
     /**
-     * Set response data
+     * 设置响应数据
      */
     public void setData(Object data) {
         this.data = data;

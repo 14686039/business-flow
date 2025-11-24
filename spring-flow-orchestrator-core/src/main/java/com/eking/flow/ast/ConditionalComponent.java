@@ -5,11 +5,21 @@ import com.eking.flow.execution.ExecutionPlan;
 import java.util.List;
 
 /**
- * Conditional component representing ternary expression: A ? B : C
+ *
+ * 当条件表达式为真时，执行真分支；否则执行假分支。
  */
 public class ConditionalComponent implements FlowComponent {
+    /**
+     * 条件表达式组件
+     */
     private final FlowComponent condition;
+    /**
+     * 真分支组件
+     */
     private final FlowComponent trueBranch;
+    /**
+     * 假分支组件
+     */
     private final FlowComponent falseBranch;
 
     public ConditionalComponent(FlowComponent condition, FlowComponent trueBranch, FlowComponent falseBranch) {
